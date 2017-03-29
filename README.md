@@ -5,7 +5,7 @@
 
 ## Supported tags and respective `Dockerfile` links
 
-- [`latest` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/Dockerfile)) (v1.1.15)
+- [`latest` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/Dockerfile) (v1.1.15)
 
 ## Supported gearmand backends
 
@@ -25,7 +25,7 @@ docker run --rm -i artefactual-labs/gearmand:latest --help
 Use `redis` backend:
 
 ```bash
-docker run --rm -i gearmand:1.1.15-alpine --redis-server 192.168.1.1 --redis-port 6380
+docker run --rm -i artefactual-labs/gearmand:latest --redis-server 192.168.1.1 --redis-port 6380
 ```
 
 You can also inject a new version of `/etc/gearmand.conf` as needed. See the [default](https://github.com/artefactual-labs/docker-gearmand/blob/master/gearmand.conf).
