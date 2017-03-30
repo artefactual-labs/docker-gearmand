@@ -25,7 +25,7 @@ docker run --rm -i artefactual/gearmand:latest --help
 Use `redis` backend and set verbose level to `DEBUG`.
 
 ```bash
-docker run --rm -i artefactual/gearmand:latest --queue-type=redis --redis-server 192.168.1.1 --redis-port 6380 --verbose=DEBUG
+docker run --rm -i artefactual/gearmand:latest --queue-type=redis --redis-server=192.168.1.1 --redis-port=6379 --verbose=DEBUG
 ```
 
 You can also inject a new version of `/etc/gearmand.conf` as needed. See the [default](https://github.com/artefactual-labs/docker-gearmand/blob/master/gearmand.conf).
