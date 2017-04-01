@@ -5,7 +5,7 @@
 
 ## Supported tags and respective `Dockerfile` links
 
-- [`latest` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/Dockerfile) (v1.1.15)
+- [`1.1.15-alpine` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/Dockerfile)
 
 ## Supported gearmand backends
 
