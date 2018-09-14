@@ -21,6 +21,8 @@ RUN set -x \
 		util-linux-dev \
 		hiredis-dev \
 		libressl-dev \
+		mariadb-dev \
+		libmemcached-dev \
 	&& wget -O gearmand.tar.gz "https://github.com/gearman/gearmand/releases/download/$GEARMAND_VERSION/gearmand-$GEARMAND_VERSION.tar.gz" \
 	&& echo "$GEARMAND_SHA1  gearmand.tar.gz" | sha1sum -c - \
 	&& mkdir -p /usr/src/gearmand \
@@ -32,12 +34,11 @@ RUN set -x \
 	&& ./configure \
 		--sysconfdir=/etc \
 		--localstatedir=/var \
-		--with-mysql=no \
+		--with-mysql=yes \
 		--with-postgresql=no \
 		--disable-libpq \
 		--disable-libtokyocabinet \
 		--disable-libdrizzle \
-		--disable-libmemcached \
 		--enable-ssl \
 		--enable-hiredis \
 		--enable-jobserver=no \

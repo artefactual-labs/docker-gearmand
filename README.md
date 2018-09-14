@@ -15,9 +15,9 @@ See also the [official releases](https://github.com/gearman/gearmand/releases) p
 ## Supported gearmand backends
 
 - `builtin` (default)
+- `libmemcached`
+- `mysql` (using `mariadb-dev`)
 - `redis`
-
-To be added: `libmemcached` (see related [issue](https://bugs.alpinelinux.org/issues/7065)).
 
 ## Usage
 
