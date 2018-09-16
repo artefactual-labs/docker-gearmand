@@ -1,10 +1,18 @@
 #!/bin/bash
 set -eo pipefail
 CONFIG_FILE='/etc/gearmand.conf'
+
 VERBOSE=${VERBOSE:-INFO}
 QUEUE_TYPE=${QUEUE_TYPE:-builtin}
+
 THREADS=${THREADS:-4}
+BACKLOG=${BACKLOG:-32}
+FILE_DESCRIPTORS=${FILE_DESCRIPTORS:-0}
+
 JOB_RETRIES=${JOB_RETRIES:-0}
+ROUND_ROBIN=${ROUND_ROBIN:-0}
+WORKER_WAKEUP=${WORKER_WAKEUP:-0}
+
 KEEPALIVE=${KEEPALIVE:-0}
 KEEPALIVE_IDLE=${KEEPALIVE_IDLE:-30}
 KEEPALIVE_INTERVAL=${KEEPALIVE_IDLE:-10}
@@ -37,36 +45,54 @@ if [ "${1#-}" != "$1" ]; then
 	set -- gearmand "$@"
 fi
 
-cat <<__CONFIG_CONTENT__ > "${CONFIG_FILE}"
---listen=0.0.0.0
---port=4730
---log-file=stderr
---verbose=${VERBOSE}
---queue-type=${QUEUE_TYPE}
---threads=${THREADS}
---job-retries=${JOB_RETRIES}
-__CONFIG_CONTENT__
+function generate_config() {
+	cat <<-__CONFIG_CONTENT__ > "${CONFIG_FILE}"
+		--listen=0.0.0.0
+		--port=4730
+		--log-file=stderr
+		--verbose=${VERBOSE}
+		--queue-type=${QUEUE_TYPE}
+		--threads=${THREADS}
+		--job-retries=${JOB_RETRIES}
+		--worker-wakeup=${WORKER_WAKEUP}
+		--backlog=${BACKLOG}
+	__CONFIG_CONTENT__
 
-if [[ ${KEEPALIVE} != '0' ]]; then
-cat <<__CONFIG_CONTENT__ >> "${CONFIG_FILE}"
---keepalive
---keepalive-idle=${KEEPALIVE_IDLE}
---keepalive-interval=${KEEPALIVE_INTERVAL}
---keepalive-count=${KEEPALIVE_COUNT}
-__CONFIG_CONTENT__
+	if [[ "${FILE_DESCRIPTORS}" != '0' ]]; then
+		cat <<-__CONFIG_CONTENT__ >> "${CONFIG_FILE}"
+			--file-descriptors=${FILE_DESCRIPTORS}
+		__CONFIG_CONTENT__
+	fi
+
+	if [[ "${ROUND_ROBIN}" != '0' ]]; then
+		cat <<-__CONFIG_CONTENT__ >> "${CONFIG_FILE}"
+			--round-robin
+		__CONFIG_CONTENT__
+	fi
+
+	if [[ ${KEEPALIVE} != '0' ]]; then
+		cat <<-__CONFIG_CONTENT__ >> "${CONFIG_FILE}"
+			--keepalive
+			--keepalive-idle=${KEEPALIVE_IDLE}
+			--keepalive-interval=${KEEPALIVE_INTERVAL}
+			--keepalive-count=${KEEPALIVE_COUNT}
+		__CONFIG_CONTENT__
+	fi
+
+	if [[ "$QUEUE_TYPE" == 'mysql' ]]; then
+		file_env 'MYSQL_PASSWORD'
+		cat <<-__CONFIG_CONTENT__ >> "${CONFIG_FILE}"
+			--mysql-host=${MYSQL_HOST:-localhost}
+			--mysql-port=${MYSQL_PORT:-3306}
+			--mysql-user=${MYSQL_USER:-root}
+			--mysql-password=${MYSQL_PASSWORD}
+			--mysql-db=${MYSQL_DB:-Gearmand}
+			--mysql-table=${MYSQL_TABLE:-gearman_queue}
+		__CONFIG_CONTENT__
+	fi
+}
+
+if ! [ -s "${CONFIG_FILE}" ]; then # dont genarate config if current config file is not empty
+    generate_config
 fi
-
-if [[ "$QUEUE_TYPE" == 'mysql' ]]; then
-file_env 'MYSQL_PASSWORD'
-cat <<__CONFIG_CONTENT__ >> "${CONFIG_FILE}"
---mysql-host=${MYSQL_HOST:-localhost}
---mysql-port=${MYSQL_PORT:-3306}
---mysql-user=${MYSQL_USER:-root}
---mysql-db=${MYSQL_DB:-Gearmand}
---mysql-table=${MYSQL_TABLE:-gearman_queue}
---mysql-password=${MYSQL_PASSWORD}
-__CONFIG_CONTENT__
-
-fi
-
 exec "$@"
