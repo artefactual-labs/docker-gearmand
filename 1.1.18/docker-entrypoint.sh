@@ -53,9 +53,9 @@ function generate_config() {
 		--verbose=${VERBOSE}
 		--queue-type=${QUEUE_TYPE}
 		--threads=${THREADS}
+		--backlog=${BACKLOG}
 		--job-retries=${JOB_RETRIES}
 		--worker-wakeup=${WORKER_WAKEUP}
-		--backlog=${BACKLOG}
 	__CONFIG_CONTENT__
 
 	if [[ "${FILE_DESCRIPTORS}" != '0' ]]; then
