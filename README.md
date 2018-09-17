@@ -33,7 +33,9 @@ Use `redis` backend and set verbose level to `DEBUG`.
 docker run --rm -i artefactual/gearmand:latest --queue-type=redis --redis-server=192.168.1.1 --redis-port=6379 --verbose=DEBUG
 ```
 
-Supported environment variables configuration(for more info check [http://gearman.info/gearmand.html](http://gearman.info/gearmand.html)):
+## Environment variables
+
+This image includes an entry point that translates environment strings into [configuration attributes](http://gearman.info/gearmand.html). The following is a list of the strings currently supported:
 
 | Name                | Description                                                                                                                              | Default                         |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
@@ -58,3 +60,9 @@ Supported environment variables configuration(for more info check [http://gearma
 | MYSQL_TABLE         | Table to use by Gearman                                                                                                                  | gearman_queue                   |
 
 You can also inject your version of config file to `/etc/gearmand.conf` as needed.
+
+## Credits
+
+See the [list of contributors](https://github.com/artefactual-labs/docker-gearmand/graphs/contributors).
+
+Thanks to @Mararok for the new entry point bringing support for environment variables and secrets.
