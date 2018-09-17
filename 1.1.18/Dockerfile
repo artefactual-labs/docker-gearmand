@@ -57,10 +57,10 @@ RUN set -x \
 	&& apk del .build-deps \
 	&& /usr/local/sbin/gearmand --version
 
-COPY gearmand.conf /etc/gearmand.conf
-
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
+RUN apk add --no-cache bash \
+    && touch /etc/gearmand.conf && chown gearman:gearman /etc/gearmand.conf \
+    && ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 USER gearman
