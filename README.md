@@ -8,7 +8,8 @@
 - [`1.1.15-alpine` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/1.1.15/Dockerfile)
 - [`1.1.16-alpine` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/1.1.16/Dockerfile)
 - [`1.1.17-alpine` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/1.1.17/Dockerfile)
-- [`1.1.18-alpine`, `latest` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/1.1.18/Dockerfile)
+- [`1.1.18-alpine` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/1.1.18/Dockerfile)
+- [`1.1.19.1-alpine`, `latest` (*Dockerfile*)](https://github.com/artefactual-labs/docker-gearmand/tree/master/1.1.19.1/Dockerfile)
 
 See also the [official releases](https://github.com/gearman/gearmand/releases) page.
 
