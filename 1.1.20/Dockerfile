@@ -5,9 +5,6 @@ ENV GEARMAND_SHA1 054b3d7f7f6e0fae982fb1d467db5902b0b11ddc
 
 RUN addgroup -S gearman && adduser -G gearman -S -D -H -s /bin/false -g "Gearman Server" gearman
 
-# COPY patches/libhashkit-common.h.patch /libhashkit-common.h.patch
-# COPY patches/libtest-cmdline.cc.patch /libtest-cmdline.cc.patch
-
 RUN set -x \
 	&& apk add --no-cache --virtual .build-deps \
 		wget \
@@ -29,7 +26,6 @@ RUN set -x \
 	&& tar -xzf gearmand.tar.gz -C /usr/src/gearmand --strip-components=1 \
 	&& rm gearmand.tar.gz \
 	&& cd /usr/src/gearmand \
-#	&& patch -p1 < /libtest-cmdline.cc.patch \
 	&& ./configure \
 		--sysconfdir=/etc \
 		--localstatedir=/var \
@@ -44,7 +40,6 @@ RUN set -x \
 	&& make \
 	&& make install \
 	&& cd / && rm -rf /usr/src/gearmand \
-#	&& rm /*.patch \
 	&& runDeps="$( \
 		scanelf --needed --nobanner --recursive /usr/local \
 			| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
