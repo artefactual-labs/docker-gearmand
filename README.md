@@ -1,5 +1,5 @@
 # gearmand
-[![](https://images.microbadger.com/badges/image/artefactual/gearmand.svg)](https://microbadger.com/images/artefactual/gearmand)
+[![Latest Release](https://img.shields.io/docker/v/artefactual/gearmand?style=flat-square)](https://github.com/artefactual-labs/docker-gearmand)
 
 `artefactual/gearmand` packages recent versions of gearmand using Alpine Linux as the base image.
 
