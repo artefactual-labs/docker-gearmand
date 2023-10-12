@@ -60,6 +60,7 @@ This image includes an entry point that translates environment strings into [con
 | MYSQL_PASSWORD_FILE | Path to file with mysql password(Docker secrets)                                                                                         |                                 |
 | MYSQL_DB            | Database to use by Gearman                                                                                                               | Gearmand                        |
 | MYSQL_TABLE         | Table to use by Gearman                                                                                                                  | gearman_queue                   |
+| GEARMAND_LISTEN_PORT | Gearmand listen port                                                                                                                    | 4730                            |
 
 You can also inject your version of config file to `/etc/gearmand.conf` as needed.
 
