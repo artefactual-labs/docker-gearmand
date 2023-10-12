@@ -48,7 +48,7 @@ fi
 function generate_config() {
 	cat <<-__CONFIG_CONTENT__ > "${CONFIG_FILE}"
 		--listen=0.0.0.0
-		--port=4730
+		--port=${GEARMAND_LISTEN_PORT}
 		--log-file=stderr
 		--verbose=${VERBOSE}
 		--queue-type=${QUEUE_TYPE}
