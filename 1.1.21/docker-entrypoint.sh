@@ -3,6 +3,7 @@ set -eo pipefail
 CONFIG_FILE='/etc/gearmand.conf'
 
 VERBOSE=${VERBOSE:-INFO}
+LISTEN_PORT=${LISTEN_PORT:-4730}
 QUEUE_TYPE=${QUEUE_TYPE:-builtin}
 
 THREADS=${THREADS:-4}
@@ -48,7 +49,7 @@ fi
 function generate_config() {
 	cat <<-__CONFIG_CONTENT__ > "${CONFIG_FILE}"
 		--listen=0.0.0.0
-		--port=${GEARMAND_LISTEN_PORT}
+		--port=${LISTEN_PORT}
 		--log-file=stderr
 		--verbose=${VERBOSE}
 		--queue-type=${QUEUE_TYPE}
