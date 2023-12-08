@@ -2,7 +2,6 @@ FROM alpine:3.18
 
 ENV GEARMAND_VERSION 1.1.21
 ENV GEARMAND_SHA1 472d2a0019e69edefcd0c1ff57e9352982e6d3f5
-ENV GEARMAND_LISTEN_PORT 4730
 
 RUN addgroup -S gearman && adduser -G gearman -S -D -H -s /bin/false -g "Gearman Server" gearman
 

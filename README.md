@@ -43,6 +43,7 @@ This image includes an entry point that translates environment strings into [con
 | Name                | Description                                                                                                                              | Default                         |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
 | VERBOSE             | Logging level                                                                                                                            | INFO                            |
+| LISTEN_PORT         | Listen port                                                                                                                              | 4730                            |
 | QUEUE_TYPE          | Persistent queue type to use                                                                                                             | builtin                         |
 | THREADS             | Number of I/O threads to use                                                                                                             | 4                               |
 | BACKLOG             | Number of backlog connections for listen                                                                                                 | 32                              |
@@ -54,14 +55,13 @@ This image includes an entry point that translates environment strings into [con
 | KEEPALIVE_IDLE      | The duration between two keepalive transmissions in idle condition                                                                       | 30                              |
 | KEEPALIVE_INTERVAL  | The duration between two successive keepalive retransmissions, if acknowledgement to the previous keepalive transmission is not received | 10                              |
 | KEEPALIVE_COUNT     | The number of retransmissions to be carried out before declaring that remote end is not available                                        | 5                               |
-| MYSQL_HOST          | Mysql server host                                                                                                                        | localhost                       |
-| MYSQL_PORT          | Mysql server port                                                                                                                        | 3306                            |
-| MYSQL_USER          | Mysql server user                                                                                                                        | root                            |
-| MYSQL_PASSWORD      | Mysql password                                                                                                                           |                                 |
-| MYSQL_PASSWORD_FILE | Path to file with mysql password(Docker secrets)                                                                                         |                                 |
+| MYSQL_HOST          | MySQL server host                                                                                                                        | localhost                       |
+| MYSQL_PORT          | MySQL server port                                                                                                                        | 3306                            |
+| MYSQL_USER          | MySQL server user                                                                                                                        | root                            |
+| MYSQL_PASSWORD      | MySQL password                                                                                                                           |                                 |
+| MYSQL_PASSWORD_FILE | Path to file with MySQL password (Docker secrets)                                                                                        |                                 |
 | MYSQL_DB            | Database to use by Gearman                                                                                                               | Gearmand                        |
 | MYSQL_TABLE         | Table to use by Gearman                                                                                                                  | gearman_queue                   |
-| GEARMAND_LISTEN_PORT | Gearmand listen port                                                                                                                    | 4730                            |
 
 You can also inject your version of config file to `/etc/gearmand.conf` as needed.
 
