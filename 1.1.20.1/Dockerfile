@@ -13,6 +13,7 @@ RUN set -x \
 		file \
 		alpine-sdk \
 		gperf \
+		libuuid \
 		boost-dev \
 		libevent-dev \
 		util-linux-dev \
