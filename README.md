@@ -10,8 +10,8 @@
 - [`1.1.17-alpine` (*Dockerfile*)](1.1.17/Dockerfile)
 - [`1.1.18-alpine` (*Dockerfile*)](1.1.18/Dockerfile)
 - [`1.1.19.1-alpine` (*Dockerfile*)](1.1.19.1/Dockerfile)
-- [`1.1.20-alpine` (*Dockerfile*)](1.1.20/Dockerfile)
-- [`1.1.21-alpine`, `latest` (*Dockerfile*)](1.1.21/Dockerfile)
+- [`1.1.20.1-alpine` (*Dockerfile*)](1.1.20.1/Dockerfile)
+- [`1.1.21.1-alpine`, `latest` (*Dockerfile*)](1.1.21.1/Dockerfile)
 
 See also the [official releases](https://github.com/gearman/gearmand/releases) page.
 
@@ -43,7 +43,7 @@ This image includes an entry point that translates environment strings into [con
 | Name                | Description                                                                                                                              | Default                         |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
 | VERBOSE             | Logging level                                                                                                                            | INFO                            |
-| LISTEN_PORT         | Listen port                                                                                                                              | 4730                            |
+| GEARMAND_PORT       | Listen port                                                                                                                              | 4730                            |
 | QUEUE_TYPE          | Persistent queue type to use                                                                                                             | builtin                         |
 | THREADS             | Number of I/O threads to use                                                                                                             | 4                               |
 | BACKLOG             | Number of backlog connections for listen                                                                                                 | 32                              |
