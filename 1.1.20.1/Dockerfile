@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.19.0
 
 ENV GEARMAND_VERSION 1.1.20
 ENV GEARMAND_SHA1 054b3d7f7f6e0fae982fb1d467db5902b0b11ddc
@@ -17,7 +17,6 @@ RUN set -x \
 		libevent-dev \
 		util-linux-dev \
 		hiredis-dev \
-		libressl-dev \
 		mariadb-dev \
 		libmemcached-dev \
 	&& wget -O gearmand.tar.gz "https://github.com/gearman/gearmand/releases/download/$GEARMAND_VERSION/gearmand-$GEARMAND_VERSION.tar.gz" \
