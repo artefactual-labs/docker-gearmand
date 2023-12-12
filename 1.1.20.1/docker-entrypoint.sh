@@ -3,8 +3,15 @@ set -eo pipefail
 CONFIG_FILE='/etc/gearmand.conf'
 
 VERBOSE=${VERBOSE:-INFO}
-LISTEN_PORT=${LISTEN_PORT:-4730}
 QUEUE_TYPE=${QUEUE_TYPE:-builtin}
+
+if [[ -n "$LISTEN_PORT" ]]; then
+    export GEARMAND_PORT="$LISTEN_PORT"
+fi
+if [[ "$GEARMAND_PORT" =~ [^0-9] ]] ; then
+    echo "WARNING: Ignoring invalid (non-numeric) value for GEARMAND_PORT: $GEARMAND_PORT"
+    unset GEARMAND_PORT
+fi
 
 THREADS=${THREADS:-4}
 BACKLOG=${BACKLOG:-32}
@@ -49,7 +56,6 @@ fi
 function generate_config() {
 	cat <<-__CONFIG_CONTENT__ > "${CONFIG_FILE}"
 		--listen=0.0.0.0
-		--port=${LISTEN_PORT}
 		--log-file=stderr
 		--verbose=${VERBOSE}
 		--queue-type=${QUEUE_TYPE}
