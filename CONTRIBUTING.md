@@ -14,6 +14,8 @@ The publishing process is done manually for now, e.g.:
 
 We rely on BuildKit's automatic QEMU emulation support.
 
+The landing page in https://hub.docker.com/r/artefactual/gearmand/ needs to be updated manually.
+
 ## Discuss possible improvements
 
 - Transfer ownership to Gearman maintainers
