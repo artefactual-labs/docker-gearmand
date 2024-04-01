@@ -11,7 +11,7 @@
 - [`1.1.18-alpine` (*Dockerfile*)](1.1.18/Dockerfile)
 - [`1.1.19.1-alpine` (*Dockerfile*)](1.1.19.1/Dockerfile)
 - [`1.1.20.1-alpine` (*Dockerfile*)](1.1.20.1/Dockerfile)
-- [`1.1.21.1-alpine`, `latest` (*Dockerfile*)](1.1.21.1/Dockerfile)
+- [`1.1.21.2-alpine`, `latest` (*Dockerfile*)](1.1.21.2/Dockerfile)
 
 See also the [official releases](https://github.com/gearman/gearmand/releases) page.
 
