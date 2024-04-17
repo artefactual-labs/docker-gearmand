@@ -1,0 +1,48 @@
+name: Lint and Security Check
+
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+
+permissions: read-all
+
+jobs:
+  shellcheck:
+    name: Lint Shell Scripts with ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './1.1.21.2'
+
+  hadolint:
+    name: Lint Dockerfiles with Hadolint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Run Hadolint with GitHub Action
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: 1.1.21.2/Dockerfile
+          failure-threshold: warning
+
+  checkov:
+    name: Run Checkov for Dockerfile Security Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Run Checkov with GitHub Action
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: 1.1.21.2/
+          quiet: false
