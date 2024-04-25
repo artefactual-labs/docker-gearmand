@@ -52,6 +52,9 @@ RUN apk add --no-cache --virtual .build-deps \
 	&& apk del .build-deps \
 	&& /usr/local/sbin/gearmand --version
 
+HEALTHCHECK --interval=5m --timeout=3s --retries=2 \
+	CMD test $(netstat -ltn | grep -c :$GEARMAND_LISTEN_PORT) -eq 1 || exit 1
+
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN apk add --no-cache bash \
     && touch /etc/gearmand.conf && chown gearman:gearman /etc/gearmand.conf \
