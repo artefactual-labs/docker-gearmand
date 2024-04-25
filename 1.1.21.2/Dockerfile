@@ -3,10 +3,11 @@ FROM alpine:3.19.1
 ENV GEARMAND_VERSION 1.1.21
 ENV GEARMAND_SHA1 472d2a0019e69edefcd0c1ff57e9352982e6d3f5
 
+SHELL ["/bin/ash", "-euxo", "pipefail", "-c"]
+
 RUN addgroup -S gearman && adduser -G gearman -S -D -H -s /bin/false -g "Gearman Server" gearman
 
-RUN set -x \
-	&& apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache --virtual .build-deps \
 		wget \
 		tar \
 		ca-certificates \
@@ -44,7 +45,7 @@ RUN set -x \
 		scanelf --needed --nobanner --recursive /usr/local \
 			| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
 			| sort -u \
-			| xargs -r apk info --installed \
+			| xargs -r apk info --installed || true \
 			| sort -u \
 	)" \
 	&& apk add --virtual .gearmand-rundeps $runDeps \
