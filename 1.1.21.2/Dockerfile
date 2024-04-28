@@ -8,7 +8,7 @@ SHELL ["/bin/ash", "-euxo", "pipefail", "-c"]
 RUN addgroup -S gearman && adduser -G gearman -S -D -H -s /bin/false -g "Gearman Server" gearman
 
 # Package list 'runDeps' is programmatically generated.
-# hadolint ignore=SC2086
+# hadolint ignore=SC2086, DL3019
 RUN apk add --no-cache --virtual .build-deps \
 		wget \
 		tar \
