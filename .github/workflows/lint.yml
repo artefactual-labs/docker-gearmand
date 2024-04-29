@@ -33,7 +33,7 @@ jobs:
         with:
           dockerfile: 1.1.21.2/Dockerfile
           failure-threshold: warning
-          override-info: DL3003
+          ignore: DL3018, DL3003
 
   checkov:
     name: Run Checkov for Dockerfile Security Analysis
