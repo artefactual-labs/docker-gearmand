@@ -15,9 +15,7 @@ This image is built on version [1.1.21] of [gearmand].
 [gearmand]: https://github.com/gearman/gearmand
 
 > [!WARNING]
-> Older releases are no longer maintained and may contain unpatched security
-> vulnerabilities and outdated dependencies. While these images remain available
-> in the container registry, we strongly discourage their use.
+> Older releases are no longer maintained and may contain unpatched security vulnerabilities and outdated dependencies. While these images remain available in the container registry, we strongly discourage their use.
 
 ## Supported gearmand backends
 
