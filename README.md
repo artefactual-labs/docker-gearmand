@@ -7,7 +7,7 @@
 
 Only the following version is currently supported and maintained:
 
-- [`1.1.21.3-alpine`, `1.1.21.3`, `latest` (*Dockerfile*)](1.1.21.3/Dockerfile)
+- [`1.1.21.4-alpine`, `1.1.21.4`, `latest` (*Dockerfile*)](1.1.21.4/Dockerfile)
 
 This image is built on version [1.1.21] of [gearmand].
 
