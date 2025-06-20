@@ -108,6 +108,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
+            ${{ env.VERSION }}-alpine
             ${{ env.VERSION }}
             latest
 

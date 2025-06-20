@@ -5,16 +5,19 @@
 
 ## Supported tags and respective `Dockerfile` links
 
-- [`1.1.15-alpine` (*Dockerfile*)](1.1.15/Dockerfile)
-- [`1.1.16-alpine` (*Dockerfile*)](1.1.16/Dockerfile)
-- [`1.1.17-alpine` (*Dockerfile*)](1.1.17/Dockerfile)
-- [`1.1.18-alpine` (*Dockerfile*)](1.1.18/Dockerfile)
-- [`1.1.19.1-alpine` (*Dockerfile*)](1.1.19.1/Dockerfile)
-- [`1.1.20.1-alpine` (*Dockerfile*)](1.1.20.1/Dockerfile)
-- [`1.1.21.2-alpine` (*Dockerfile*)](1.1.21.2/Dockerfile)
-- [`1.1.21.3-alpine`, `latest` (*Dockerfile*)](1.1.21.3/Dockerfile)
+Only the following version is currently supported and maintained:
 
-See also the [official releases](https://github.com/gearman/gearmand/releases) page.
+- [`1.1.21.3-alpine`, `1.1.21.3`, `latest` (*Dockerfile*)](1.1.21.3/Dockerfile)
+
+This image is built on version [1.1.21] of [gearmand].
+
+[1.1.21]: https://github.com/gearman/gearmand/releases/tag/1.1.21
+[gearmand]: https://github.com/gearman/gearmand
+
+> [!WARNING]
+> Older releases are no longer maintained and may contain unpatched security
+> vulnerabilities and outdated dependencies. While these images remain available
+> in the container registry, we strongly discourage their use.
 
 ## Supported gearmand backends
 
