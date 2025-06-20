@@ -93,7 +93,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
+          username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Docker Buildx
@@ -105,10 +105,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+            ${{ env.VERSION }}
+            latest
 
       - name: Create manifest list and push
         working-directory: ${{ runner.temp }}/digests
