@@ -69,6 +69,17 @@ This image includes an entry point that translates environment strings into [con
 
 You can also inject your version of config file to `/etc/gearmand.conf` as needed.
 
+## Release process
+
+To create a new release, run the following command, replacing `VERSION` with the
+desired version (which must match a directory for the build context in this
+repository), e.g. `1.1.21.4`:
+
+    gh workflow run release.yml --field version=VERSION
+
+This command will automatically build and publish the images, create a git tag,
+and publish a GitHub release.
+
 ## Credits
 
 See the [list of contributors](https://github.com/artefactual-labs/docker-gearmand/graphs/contributors).
