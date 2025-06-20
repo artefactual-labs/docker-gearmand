@@ -30,7 +30,8 @@ jobs:
       - name: Check version format
         run: |
           VERSION="${{ github.event.inputs.version }}"
-          if [[ ! "$VERSION" =~ ^\d+\.\d+\.\d+(\.\d+)?$ ]]; then
+          # Accept 1.2.3 or 1.2.3.4.
+          if [[ ! "$VERSION" =~ ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(\.[[:digit:]]+)?$ ]]; then
             echo "Invalid version format: $VERSION"
             exit 1
           fi
