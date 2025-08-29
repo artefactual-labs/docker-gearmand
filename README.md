@@ -7,11 +7,11 @@
 
 Only the following version is currently supported and maintained:
 
-- [`1.1.21.5-alpine`, `1.1.21.5`, `latest` (*Dockerfile*)](1.1.21.5/Dockerfile)
+- [`1.1.22-alpine`, `1.1.22`, `latest` (*Dockerfile*)](1.1.22/Dockerfile)
 
-This image is built on version [1.1.21] of [gearmand].
+This image is built on version [1.1.22] of [gearmand].
 
-[1.1.21]: https://github.com/gearman/gearmand/releases/tag/1.1.21
+[1.1.22]: https://github.com/gearman/gearmand/releases/tag/1.1.22
 [gearmand]: https://github.com/gearman/gearmand
 
 > [!WARNING]
@@ -40,7 +40,7 @@ docker run --rm -i artefactual/gearmand:latest --queue-type=redis --redis-server
 
 ## Environment variables
 
-This image includes an entry point that translates environment strings into [configuration attributes](http://gearman.info/gearmand.html). The following is a list of the strings currently supported:
+This image includes an entry point that translates environment strings into [configuration attributes](https://gearman.org/manual/job_server/). The following is a list of the strings currently supported:
 
 | Name                | Description                                                                                                                              | Default                         |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
