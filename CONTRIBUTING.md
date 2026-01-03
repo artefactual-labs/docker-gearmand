@@ -19,6 +19,7 @@ such as `1.1.22.1` instead of modifying the existing tree.
 
 - [x] Automate release process
 - [x] Publish multi-arch images
+- [x] Pin actions in GitHub workflows
 - [ ] Reduce duplication across release trees (template or generator)
 - [ ] Lint current release(s) dynamically in `lint.yml`
 - [ ] Publish SBOM/provenance output and sign images
