@@ -7,11 +7,11 @@
 
 Only the following version is currently supported and maintained:
 
-- [`1.1.22-alpine`, `1.1.22`, `latest` (*Dockerfile*)](1.1.22/Dockerfile)
+- [`1.1.22.1-alpine`, `1.1.22.1`, `latest` (*Dockerfile*)](1.1.22.1/Dockerfile)
 
-This image is built on version [1.1.22] of [gearmand].
+This image is built on version [1.1.22.1] of [gearmand].
 
-[1.1.22]: https://github.com/gearman/gearmand/releases/tag/1.1.22
+[1.1.22.1]: https://github.com/gearman/gearmand/releases/tag/1.1.22.1
 [gearmand]: https://github.com/gearman/gearmand
 
 > [!WARNING]
