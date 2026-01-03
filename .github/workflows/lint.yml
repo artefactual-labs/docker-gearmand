@@ -42,3 +42,5 @@ jobs:
         with:
           directory: 1.1.22.1/
           quiet: false
+          # CKV_DOCKER_7: produces false positives due to the use of ARG for the base image.
+          skip_check: CKV_DOCKER_7
