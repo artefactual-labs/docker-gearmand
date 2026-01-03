@@ -70,11 +70,12 @@ COPY --from=build /run-deps.txt /run-deps.txt
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-RUN apk add --no-cache bash $(cat /run-deps.txt) \
-	&& addgroup -S gearman \
-	&& adduser -G gearman -S -D -H -s /bin/false -g 'Gearman Server' gearman \
-	&& touch /etc/gearmand.conf && chown gearman:gearman /etc/gearmand.conf \
-	&& ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh
+RUN set -eux; \
+	xargs apk add --no-cache bash < /run-deps.txt; \
+	addgroup -S gearman; \
+	adduser -S -D -H -s /sbin/nologin -G gearman -g "Gearman Server" gearman; \
+	install -o gearman -g gearman -m 0644 /dev/null /etc/gearmand.conf; \
+	ln -s /usr/local/bin/docker-entrypoint.sh /entrypoint.sh
 
 HEALTHCHECK --interval=5m --timeout=3s --retries=2 \
 	CMD test $(netstat -ltn | grep -c :$GEARMAND_LISTEN_PORT) -eq 1 || exit 1
