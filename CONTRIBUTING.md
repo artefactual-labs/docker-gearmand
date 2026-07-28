@@ -16,7 +16,7 @@ Gearman 1.x image releases retain the legacy dotted packaging revision scheme,
 such as `1.1.22.1`. Existing 1.x releases will not be renamed to use `-rN`.
 
 1. Prepare release, e.g. see the [2.0.0] directory.
-2. Update `CURRENT_VERSION` in `lint.yml` to the new release tree.
+2. Update `CURRENT_VERSION` in `checks.yml` to the new release tree.
 3. Launch the release workflow:
 
     gh workflow run release.yml --field version=2.0.0
@@ -34,7 +34,7 @@ versions from 2.0.0 onwards using `X.Y.Z` or `X.Y.Z-rN` (where `N` starts at
 - [x] Publish multi-arch images
 - [x] Pin actions in GitHub workflows
 - [ ] Reduce duplication across release trees (template or generator)
-- [ ] Lint current release(s) dynamically in `lint.yml`
+- [ ] Check current release(s) dynamically in `checks.yml`
 - [ ] Publish SBOM/provenance output and sign images
 - [ ] Run image validation tests
 - [ ] Convert entrypoint to POSIX `sh` (drop `bash`)
