@@ -38,31 +38,71 @@ Use `redis` backend and set verbose level to `DEBUG`.
 docker run --rm -i artefactual/gearmand:latest --queue-type=redis --redis-server=192.168.1.1 --redis-port=6379 --verbose=DEBUG
 ```
 
+## MySQL queue
+
+Set `QUEUE_TYPE=mysql` and provide the database connection settings to use a
+MySQL or MariaDB server for the persistent queue:
+
+```bash
+docker run --rm \
+  -e QUEUE_TYPE=mysql \
+  -e MYSQL_HOST=mysql \
+  -e MYSQL_USER=gearman \
+  -e MYSQL_PASSWORD=secret \
+  -e MYSQL_DB=Gearmand \
+  artefactual/gearmand:latest
+```
+
+MariaDB Connector/C 3.4 and newer enables verified TLS automatically for TCP
+connections. If the database server does not support TLS, gearmand exits with
+`SSL is required, but the server does not support it`. Set
+`MARIADB_TLS_DISABLE_PEER_VERIFICATION=1` to allow the connector to use an
+unencrypted connection:
+
+```yaml
+services:
+  gearmand:
+    image: artefactual/gearmand:latest
+    environment:
+      QUEUE_TYPE: mysql
+      MYSQL_HOST: mysql
+      MYSQL_USER: gearman
+      MYSQL_PASSWORD: secret
+      MYSQL_DB: Gearmand
+      MARIADB_TLS_DISABLE_PEER_VERIFICATION: "1"
+```
+
+> [!WARNING]
+> With gearmand's MySQL queue plugin, this setting makes the database
+> connection unencrypted. Use it only when TLS cannot be enabled on the
+> database server and the connection travels over a trusted private network.
+
 ## Environment variables
 
 This image includes an entry point that translates environment strings into [configuration attributes](https://gearman.org/manual/job_server/). The following is a list of the strings currently supported:
 
-| Name                | Description                                                                                                                              | Default                         |
-|---------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
-| VERBOSE             | Logging level                                                                                                                            | INFO                            |
-| GEARMAND_PORT       | Listen port                                                                                                                              | 4730                            |
-| QUEUE_TYPE          | Persistent queue type to use                                                                                                             | builtin                         |
-| THREADS             | Number of I/O threads to use                                                                                                             | 4                               |
-| BACKLOG             | Number of backlog connections for listen                                                                                                 | 32                              |
-| FILE_DESCRIPTORS    | Number of file descriptors to allow for the process                                                                                      | Default is max allowed for user |
-| JOB_RETRIES         | Number of attempts to run the job before the job server removes it. Default is no limit.                                                 | 0                               |
-| WORKER_WAKEUP       | Number of workers to wakeup for each job received                                                                                        | 0                               |
-| KEEPALIVE           | Enable keepalive on sockets                                                                                                              | 0                               |
-| KEEPALIVE_IDLE      | The duration between two keepalive transmissions in idle condition                                                                       | 300                             |
-| KEEPALIVE_INTERVAL  | The duration between two successive keepalive retransmissions, if acknowledgement to the previous keepalive transmission is not received | 30                              |
-| KEEPALIVE_COUNT     | The number of retransmissions to be carried out before declaring that remote end is not available                                        | 5                               |
-| MYSQL_HOST          | MySQL server host                                                                                                                        | localhost                       |
-| MYSQL_PORT          | MySQL server port                                                                                                                        | 3306                            |
-| MYSQL_USER          | MySQL server user                                                                                                                        | root                            |
-| MYSQL_PASSWORD      | MySQL password                                                                                                                           |                                 |
-| MYSQL_PASSWORD_FILE | Path to file with MySQL password (Docker secrets)                                                                                        |                                 |
-| MYSQL_DB            | Database to use by Gearman                                                                                                               | Gearmand                        |
-| MYSQL_TABLE         | Table to use by Gearman                                                                                                                  | gearman_queue                   |
+| Name                                  | Description                                                                                                                              | Default                         |
+|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| VERBOSE                               | Logging level                                                                                                                            | INFO                            |
+| GEARMAND_PORT                         | Listen port                                                                                                                              | 4730                            |
+| QUEUE_TYPE                            | Persistent queue type to use                                                                                                             | builtin                         |
+| THREADS                               | Number of I/O threads to use                                                                                                             | 4                               |
+| BACKLOG                               | Number of backlog connections for listen                                                                                                 | 32                              |
+| FILE_DESCRIPTORS                      | Number of file descriptors to allow for the process                                                                                      | Default is max allowed for user |
+| JOB_RETRIES                           | Number of attempts to run the job before the job server removes it. Default is no limit.                                                 | 0                               |
+| WORKER_WAKEUP                         | Number of workers to wakeup for each job received                                                                                        | 0                               |
+| KEEPALIVE                             | Enable keepalive on sockets                                                                                                              | 0                               |
+| KEEPALIVE_IDLE                        | The duration between two keepalive transmissions in idle condition                                                                       | 300                             |
+| KEEPALIVE_INTERVAL                    | The duration between two successive keepalive retransmissions, if acknowledgement to the previous keepalive transmission is not received | 30                              |
+| KEEPALIVE_COUNT                       | The number of retransmissions to be carried out before declaring that remote end is not available                                        | 5                               |
+| MYSQL_HOST                            | MySQL server host                                                                                                                        | localhost                       |
+| MYSQL_PORT                            | MySQL server port                                                                                                                        | 3306                            |
+| MYSQL_USER                            | MySQL server user                                                                                                                        | root                            |
+| MYSQL_PASSWORD                        | MySQL password                                                                                                                           |                                 |
+| MYSQL_PASSWORD_FILE                   | Path to file with MySQL password (Docker secrets)                                                                                        |                                 |
+| MYSQL_DB                              | Database to use by Gearman                                                                                                               | Gearmand                        |
+| MYSQL_TABLE                           | Table to use by Gearman                                                                                                                  | gearman_queue                   |
+| MARIADB_TLS_DISABLE_PEER_VERIFICATION | Allow an unencrypted MySQL queue connection when the database server does not support TLS                                                |                                 |
 
 Gearman 2.0 always uses round-robin scheduling and no longer provides a way to
 disable it. The deprecated `ROUND_ROBIN` environment variable is ignored and
