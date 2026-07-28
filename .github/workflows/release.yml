@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g. 1.1.22.1)'
+        description: 'Image release (e.g. 1.1.22.1 or 2.0.0-r1)'
         required: true
         type: string
 
@@ -27,12 +27,21 @@ jobs:
       - name: Check out code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
-      - name: Check version format
+      - name: Check version and build context
+        env:
+          VERSION: ${{ github.event.inputs.version }}
         run: |
-          VERSION="${{ github.event.inputs.version }}"
-          # Accept `1.2.3` or `1.2.3.4`.
-          if [[ ! "$VERSION" =~ ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(\.[[:digit:]]+)?$ ]]; then
+          # Keep dotted revisions for 1.x; use `-rN` revisions for 2.x onwards.
+          if [[ "$VERSION" =~ ^1\.[[:digit:]]+\.[[:digit:]]+(\.[[:digit:]]+)?$ ]]; then
+            :
+          elif [[ "$VERSION" =~ ^([2-9]|[1-9][[:digit:]]+)\.[[:digit:]]+\.[[:digit:]]+(-r[1-9][[:digit:]]*)?$ ]]; then
+            :
+          else
             echo "Invalid version format: $VERSION"
+            exit 1
+          fi
+          if [[ ! -f "$VERSION/Dockerfile" ]]; then
+            echo "Build context not found: $VERSION/Dockerfile"
             exit 1
           fi
           echo "Version format OK: $VERSION"

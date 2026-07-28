@@ -2,15 +2,28 @@
 
 ## How to release
 
-Each release has its own dedicated tree at the repository root (for example,
-`1.1.22`). Release trees are immutable: if a new build of `1.1.22` is needed
-(e.g., to include a newer Alpine or other dependency), create a new patch tree
-such as `1.1.22.1` instead of modifying the existing tree.
+Each upstream Gearman release has its own dedicated tree at the repository root
+(for example, [2.0.0]). The first image release uses the upstream version
+unchanged.
 
-1. Prepare release, e.g. see the [1.1.22.1] directory.
-2. Launch the release workflow:
+Release trees are immutable. Beginning with Gearman 2.0.0, if an image must be
+rebuilt without changing the Gearman version (e.g., to include a newer Alpine
+or another packaging change), create a new tree with the next packaging
+revision, such as `2.0.0-r1` and then `2.0.0-r2`. Keep `GEARMAND_VERSION` set
+to the upstream version (`2.0.0` in these examples).
 
-    gh workflow run release.yml --field version=1.1.22.1
+Gearman 1.x image releases retain the legacy dotted packaging revision scheme,
+such as `1.1.22.1`. Existing 1.x releases will not be renamed to use `-rN`.
+
+1. Prepare release, e.g. see the [2.0.0] directory.
+2. Update `CURRENT_VERSION` in `lint.yml` to the new release tree.
+3. Launch the release workflow:
+
+    gh workflow run release.yml --field version=2.0.0
+
+The release workflow accepts 1.x versions using `1.Y.Z` or `1.Y.Z.N`, and
+versions from 2.0.0 onwards using `X.Y.Z` or `X.Y.Z-rN` (where `N` starts at
+1). The input must match a release tree in the repository.
 
 ## Future improvements
 
@@ -31,5 +44,4 @@ such as `1.1.22.1` instead of modifying the existing tree.
 - [ ] Supply chain attestations (SLSA, provenance, SBOMs)
 - [ ] Improve healthcheck robustness (avoid `netstat`)
 
-[1.1.22]: https://github.com/artefactual-labs/docker-gearmand/tree/main/1.1.22
-[1.1.22.1]: https://github.com/artefactual-labs/docker-gearmand/tree/main/1.1.22.1
+[2.0.0]: https://github.com/artefactual-labs/docker-gearmand/tree/main/2.0.0
