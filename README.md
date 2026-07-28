@@ -7,11 +7,11 @@
 
 Only the following version is currently supported and maintained:
 
-- [`1.1.22.1-alpine`, `1.1.22.1`, `latest` (*Dockerfile*)](1.1.22.1/Dockerfile)
+- [`2.0.0-alpine`, `2.0.0`, `latest` (*Dockerfile*)](2.0.0/Dockerfile)
 
-This image is built on version [1.1.22.1] of [gearmand].
+This image is built on version [2.0.0] of [gearmand].
 
-[1.1.22.1]: https://github.com/gearman/gearmand/releases/tag/1.1.22.1
+[2.0.0]: https://github.com/gearman/gearmand/releases/tag/2.0.0
 [gearmand]: https://github.com/gearman/gearmand
 
 > [!WARNING]
@@ -51,11 +51,10 @@ This image includes an entry point that translates environment strings into [con
 | BACKLOG             | Number of backlog connections for listen                                                                                                 | 32                              |
 | FILE_DESCRIPTORS    | Number of file descriptors to allow for the process                                                                                      | Default is max allowed for user |
 | JOB_RETRIES         | Number of attempts to run the job before the job server removes it. Default is no limit.                                                 | 0                               |
-| ROUND_ROBIN         | Assign work in round-robin order per worker connection                                                                                   | 0                               |
 | WORKER_WAKEUP       | Number of workers to wakeup for each job received                                                                                        | 0                               |
 | KEEPALIVE           | Enable keepalive on sockets                                                                                                              | 0                               |
-| KEEPALIVE_IDLE      | The duration between two keepalive transmissions in idle condition                                                                       | 30                              |
-| KEEPALIVE_INTERVAL  | The duration between two successive keepalive retransmissions, if acknowledgement to the previous keepalive transmission is not received | 10                              |
+| KEEPALIVE_IDLE      | The duration between two keepalive transmissions in idle condition                                                                       | 300                             |
+| KEEPALIVE_INTERVAL  | The duration between two successive keepalive retransmissions, if acknowledgement to the previous keepalive transmission is not received | 30                              |
 | KEEPALIVE_COUNT     | The number of retransmissions to be carried out before declaring that remote end is not available                                        | 5                               |
 | MYSQL_HOST          | MySQL server host                                                                                                                        | localhost                       |
 | MYSQL_PORT          | MySQL server port                                                                                                                        | 3306                            |
@@ -65,15 +64,27 @@ This image includes an entry point that translates environment strings into [con
 | MYSQL_DB            | Database to use by Gearman                                                                                                               | Gearmand                        |
 | MYSQL_TABLE         | Table to use by Gearman                                                                                                                  | gearman_queue                   |
 
+Gearman 2.0 always uses round-robin scheduling and no longer provides a way to
+disable it. The deprecated `ROUND_ROBIN` environment variable is ignored and
+produces a warning when set.
+
+Keepalive remains opt-in. When `KEEPALIVE` is enabled, the defaults above match
+the production values recommended in the [Gearman 2.0.0 release notes][2.0.0].
+
 You can also inject your version of config file to `/etc/gearmand.conf` as needed.
 
 ## Release process
 
 To create a new release, run the following command, replacing `VERSION` with the
 desired version (which must match a directory for the build context in this
-repository), e.g. `1.1.21.4`:
+repository), e.g. `2.0.0`:
 
     gh workflow run release.yml --field version=VERSION
+
+Beginning with Gearman 2.0.0, packaging-only rebuilds keep the upstream version
+and append a release suffix, starting with `-r1` (for example, `2.0.0-r1`).
+Gearman 1.x images retain the legacy dotted scheme (for example, `1.1.22.1`).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the versioning policy.
 
 This command will automatically build and publish the images, create a git tag,
 and publish a GitHub release.
