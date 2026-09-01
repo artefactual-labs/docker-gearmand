@@ -67,3 +67,13 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Run integration test
         run: tests/mysql-no-tls.sh "$CURRENT_VERSION"
+
+  redis-replay:
+    name: Test Redis queue replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Run Redis replay test
+        run: tests/redis-replay.sh "$CURRENT_VERSION"
