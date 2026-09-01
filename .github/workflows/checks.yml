@@ -48,6 +48,16 @@ jobs:
           # CKV_DOCKER_7: produces false positives due to the use of ARG for the base image.
           skip_check: CKV_DOCKER_7
 
+  image-smoke:
+    name: Test image startup and health
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Run image smoke test
+        run: tests/image-smoke.sh "$CURRENT_VERSION"
+
   mysql-no-tls:
     name: Test MySQL queue without TLS
     runs-on: ubuntu-latest
