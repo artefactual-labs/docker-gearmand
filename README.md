@@ -7,10 +7,11 @@
 
 Only the following version is currently supported and maintained:
 
-- [`2.0.0-alpine`, `2.0.0`, `latest` (*Dockerfile*)](2.0.0/Dockerfile)
+- [`2.1.0-alpine`, `2.1.0`, `latest` (*Dockerfile*)](2.1.0/Dockerfile)
 
-This image is built on version [2.0.0] of [gearmand].
+This image is built on version [2.1.0] of [gearmand].
 
+[2.1.0]: https://github.com/gearman/gearmand/releases/tag/2.1.0
 [2.0.0]: https://github.com/gearman/gearmand/releases/tag/2.0.0
 [gearmand]: https://github.com/gearman/gearmand
 
@@ -21,6 +22,7 @@ This image is built on version [2.0.0] of [gearmand].
 
 - `builtin` (default)
 - `libmemcached`
+- `libsqlite3`
 - `mysql` (using `mariadb-dev`)
 - `redis`
 
@@ -37,6 +39,12 @@ Use `redis` backend and set verbose level to `DEBUG`.
 ```bash
 docker run --rm -i artefactual/gearmand:latest --queue-type=redis --redis-server=192.168.1.1 --redis-port=6379 --verbose=DEBUG
 ```
+
+The image health check uses the `gearman --ping` client command to verify that
+the job server responds to the Gearman protocol. It checks the port configured
+by `GEARMAND_PORT`, the legacy `LISTEN_PORT`, or port 4730 by default. Override
+the health check when using a custom configuration file that binds another
+address or port, or when accepting only SSL connections.
 
 ## MySQL queue
 
@@ -89,7 +97,7 @@ This image includes an entry point that translates environment strings into [con
 | THREADS                               | Number of I/O threads to use                                                                                                             | 4                               |
 | BACKLOG                               | Number of backlog connections for listen                                                                                                 | 32                              |
 | FILE_DESCRIPTORS                      | Number of file descriptors to allow for the process                                                                                      | Default is max allowed for user |
-| JOB_RETRIES                           | Number of attempts to run the job before the job server removes it. Default is no limit.                                                 | 0                               |
+| JOB_RETRIES                           | Number of retries after a failed job. Use -1 for no limit, 0 for no retries, or 1-255 for a bounded number.                              | -1                              |
 | WORKER_WAKEUP                         | Number of workers to wakeup for each job received                                                                                        | 0                               |
 | KEEPALIVE                             | Enable keepalive on sockets                                                                                                              | 0                               |
 | KEEPALIVE_IDLE                        | The duration between two keepalive transmissions in idle condition                                                                       | 300                             |
@@ -104,9 +112,14 @@ This image includes an entry point that translates environment strings into [con
 | MYSQL_TABLE                           | Table to use by Gearman                                                                                                                  | gearman_queue                   |
 | MARIADB_TLS_DISABLE_PEER_VERIFICATION | Allow an unencrypted MySQL queue connection when the database server does not support TLS                                                |                                 |
 
-Gearman 2.0 always uses round-robin scheduling and no longer provides a way to
+Gearman 2.x always uses round-robin scheduling and no longer provides a way to
 disable it. The deprecated `ROUND_ROBIN` environment variable is ignored and
 produces a warning when set.
+
+Gearman 2.1 changed `--job-retries=0` from unlimited retries to no retries. The
+image now uses `-1` by default to preserve its previous unlimited-retry
+behavior. Users that explicitly set `JOB_RETRIES=0` must change it to `-1` if
+they want jobs to continue retrying without a limit.
 
 Keepalive remains opt-in. When `KEEPALIVE` is enabled, the defaults above match
 the production values recommended in the [Gearman 2.0.0 release notes][2.0.0].
@@ -117,12 +130,12 @@ You can also inject your version of config file to `/etc/gearmand.conf` as neede
 
 To create a new release, run the following command, replacing `VERSION` with the
 desired version (which must match a directory for the build context in this
-repository), e.g. `2.0.0`:
+repository), e.g. `2.1.0`:
 
     gh workflow run release.yml --field version=VERSION
 
 Beginning with Gearman 2.0.0, packaging-only rebuilds keep the upstream version
-and append a release suffix, starting with `-r1` (for example, `2.0.0-r1`).
+and append a release suffix, starting with `-r1` (for example, `2.1.0-r1`).
 Gearman 1.x images retain the legacy dotted scheme (for example, `1.1.22.1`).
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the versioning policy.
 
