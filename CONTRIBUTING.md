@@ -36,7 +36,7 @@ versions from 2.0.0 onwards using `X.Y.Z` or `X.Y.Z-rN` (where `N` starts at
 - [ ] Reduce duplication across release trees (template or generator)
 - [ ] Check current release(s) dynamically in `checks.yml`
 - [ ] Publish SBOM/provenance output and sign images
-- [ ] Run image validation tests
+- [x] Run image validation tests
 - [ ] Convert entrypoint to POSIX `sh` (drop `bash`)
 - [ ] Configure dependency/update automation
 - [ ] Improve build reproducibility (deterministic builds, pinned deps)
