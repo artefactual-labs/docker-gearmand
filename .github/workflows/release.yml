@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Image release (e.g. 1.1.22.1 or 2.0.0-r1)'
+        description: 'Image release (e.g. 1.1.22.1 or 2.1.0-r1)'
         required: true
         type: string
 
