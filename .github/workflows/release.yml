@@ -34,9 +34,9 @@ jobs:
       matrix:
         include:
           - platform: linux/amd64
-            runner: ubuntu-24.04
+            runner: ubuntu-26.04
           - platform: linux/arm64
-            runner: ubuntu-24.04-arm
+            runner: ubuntu-26.04-arm
     steps:
       - name: Check out code
         uses: actions/checkout@v7.0.1
@@ -114,7 +114,7 @@ jobs:
   merge:
     name: Publish multi-platform image
     timeout-minutes: 10
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - build
     steps:
@@ -168,7 +168,7 @@ jobs:
   release:
     name: Publish release
     timeout-minutes: 10
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: merge
     permissions:
       contents: write # Create the release and its tag.
