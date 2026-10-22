@@ -91,7 +91,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Run Checkov
-        uses: bridgecrewio/checkov-action@v12.1347.0
+        uses: bridgecrewio/checkov-action@v12.3134.0
         with:
           directory: ${{ env.CURRENT_VERSION }}/
           quiet: false

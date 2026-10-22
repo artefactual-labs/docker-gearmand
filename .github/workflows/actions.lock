@@ -5,7 +5,7 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/checks.yml':
         - 'actions/checkout@v7.0.1'
-        - 'bridgecrewio/checkov-action@v12.1347.0'
+        - 'bridgecrewio/checkov-action@v12.3134.0'
         - 'hadolint/hadolint-action@v3.5.0'
         - 'jdx/jactionlint@v2.2.0'
         - 'ludeeus/action-shellcheck@2.0.0'
@@ -34,9 +34,9 @@ dependencies:
         commit: 'sha1-cf430e030ddbb5b0abf93d22962f4752f3646cd9'
         owner_id: 44036562
         repo_id: 192625955
-    'bridgecrewio/checkov-action@v12.1347.0':
-        ref: 'v12.1347.0'
-        commit: 'sha1-99bb2caf247dfd9f03cf984373bc6043d4e32ebf'
+    'bridgecrewio/checkov-action@v12.3134.0':
+        ref: 'v12.3134.0'
+        commit: 'sha1-6f26dc90000b74feb589a906cdfae540f5119895'
         owner_id: 48174253
         repo_id: 256738016
     'docker/build-push-action@v7.4.0':
