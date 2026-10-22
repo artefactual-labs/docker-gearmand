@@ -21,17 +21,35 @@ env:
   CURRENT_VERSION: 2.2.0
 
 jobs:
+  verify-actions-lock:
+    name: Verify action lockfile
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install actions-lock
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh extension install github/gh-actions-lock --pin v0.2.0
+      - name: Verify locked dependencies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh actions-lock --verify
+
   lint-workflows:
     name: Lint GitHub Actions
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Check workflows
-        uses: jdx/jactionlint@1027f0a131ab98bc7e191d995bfa15dbed5bbf8f # v2.2.0
+        uses: jdx/jactionlint@v2.2.0
         with:
           strict-exit: "true"
 
@@ -41,11 +59,11 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # v2.0.0
+        uses: ludeeus/action-shellcheck@2.0.0
 
   hadolint:
     timeout-minutes: 10
@@ -53,11 +71,11 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Run Hadolint
-        uses: hadolint/hadolint-action@06be81baf89a55ffd0e24b8f04a4185738dd3387 # v3.5.0
+        uses: hadolint/hadolint-action@v3.5.0
         with:
           dockerfile: ${{ env.CURRENT_VERSION }}/Dockerfile
           failure-threshold: warning
@@ -69,11 +87,11 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Run Checkov
-        uses: bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf # v12.1347.0
+        uses: bridgecrewio/checkov-action@v12.1347.0
         with:
           directory: ${{ env.CURRENT_VERSION }}/
           quiet: false
@@ -86,7 +104,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Run image smoke test
@@ -98,7 +116,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Run integration test
@@ -110,7 +128,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Run Redis replay test
