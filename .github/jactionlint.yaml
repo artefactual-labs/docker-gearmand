@@ -1,4 +1,6 @@
 profile: pedantic
 rules:
+  # gh actions-lock --verify enforces the pins in actions.lock.
+  unpinned-uses: off
   # Docker Hub credentials remain repository secrets; no protected environment is configured.
   secrets-outside-env: off

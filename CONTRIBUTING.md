@@ -6,10 +6,18 @@ Run [jactionlint] before committing workflow changes:
 
 ```bash
 jactionlint --strict-exit
+gh actions-lock --verify
 ```
 
-The configuration uses the pedantic profile. Docker Hub credentials remain
-repository secrets, so the environment-secret rule is disabled.
+Install the lockfile tool with
+`gh extension install github/gh-actions-lock --pin v0.2.0`. After adding or
+updating an action, run `gh actions-lock` and commit the generated
+`.github/workflows/actions.lock` alongside the workflow changes.
+
+The configuration uses the pedantic profile. The `unpinned-uses` rule is
+disabled because `gh actions-lock --verify` checks the lockfile pins. Docker Hub
+credentials remain repository secrets, so the environment-secret rule is
+disabled.
 
 ## How to release
 
