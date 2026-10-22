@@ -23,7 +23,7 @@ env:
 jobs:
   verify-actions-lock:
     name: Verify action lockfile
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     steps:
       - name: Check out code
@@ -41,7 +41,7 @@ jobs:
 
   lint-workflows:
     name: Lint GitHub Actions
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     steps:
       - name: Check out code
@@ -56,7 +56,7 @@ jobs:
   shellcheck:
     timeout-minutes: 10
     name: Lint Shell Scripts with ShellCheck
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Check out code
         uses: actions/checkout@v7.0.1
@@ -68,7 +68,7 @@ jobs:
   hadolint:
     timeout-minutes: 10
     name: Lint Dockerfiles with Hadolint
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Check out code
         uses: actions/checkout@v7.0.1
@@ -84,7 +84,7 @@ jobs:
   checkov:
     timeout-minutes: 10
     name: Run Checkov for Dockerfile Security Analysis
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Check out code
         uses: actions/checkout@v7.0.1
@@ -100,7 +100,7 @@ jobs:
 
   image-smoke:
     name: Test image startup and health
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
       - name: Check out code
@@ -112,7 +112,7 @@ jobs:
 
   mysql-no-tls:
     name: Test MySQL queue without TLS
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
       - name: Check out code
@@ -124,7 +124,7 @@ jobs:
 
   redis-replay:
     name: Test Redis queue replay
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
       - name: Check out code
