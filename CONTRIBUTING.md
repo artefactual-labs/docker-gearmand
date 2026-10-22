@@ -19,6 +19,11 @@ disabled because `gh actions-lock --verify` checks the lockfile pins. Docker Hub
 credentials remain repository secrets, so the environment-secret rule is
 disabled.
 
+Dependabot checks GitHub Actions weekly, with a seven-day cooldown and one
+grouped version-update pull request at a time. Docker updates are excluded
+because release trees are immutable. The `gh-actions-lock` extension version in
+the installation command must still be updated manually.
+
 ## How to release
 
 Each upstream Gearman release has its own dedicated tree at the repository root
@@ -61,7 +66,7 @@ The input must match a release tree in the repository.
 - [ ] Publish SBOM/provenance output and sign images
 - [x] Run image validation tests
 - [ ] Convert entrypoint to POSIX `sh` (drop `bash`)
-- [ ] Configure dependency/update automation
+- [x] Configure GitHub Actions dependency updates
 - [ ] Improve build reproducibility (deterministic builds, pinned deps)
 - [ ] Vulnerability scanning
 - [ ] Supply chain attestations (SLSA, provenance, SBOMs)
