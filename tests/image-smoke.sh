@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-version=${1:-2.1.0}
+version=${1:-2.2.0}
 test_id=$$
 image="docker-gearmand:image-smoke-${test_id}"
 container="docker-gearmand-image-smoke-${test_id}"
@@ -19,6 +19,10 @@ if [[ ! -f "${version}/Dockerfile" ]]; then
 fi
 
 docker build --tag "${image}" "${version}"
+
+# Alpine's 20261020 CA update distrusts the compromised eMudhra chains.
+docker run --rm --entrypoint sh "${image}" -ec \
+	'apk info --exists "ca-certificates-bundle>=20261020-r0"'
 
 reported_version="$(docker run --rm "${image}" gearmand --version)"
 if [[ "${reported_version}" != *"gearmand ${version}"* ]]; then

@@ -1,22 +1,22 @@
 # gearmand
-[![Latest Release](https://img.shields.io/docker/v/artefactual/gearmand?style=flat-square)](https://github.com/artefactual-labs/docker-gearmand)
 
-`artefactual/gearmand` packages recent versions of gearmand using Alpine Linux as the base image.
+[![Latest Release][release-badge]][repository]
+
+`artefactual/gearmand` packages recent versions of gearmand using Alpine Linux
+as the base image.
 
 ## Supported tags and respective `Dockerfile` links
 
 Only the following version is currently supported and maintained:
 
-- [`2.1.0-alpine`, `2.1.0`, `latest` (*Dockerfile*)](2.1.0/Dockerfile)
+- [`2.2.0-alpine`, `2.2.0`, `latest` (*Dockerfile*)][dockerfile]
 
-This image is built on version [2.1.0] of [gearmand].
-
-[2.1.0]: https://github.com/gearman/gearmand/releases/tag/2.1.0
-[2.0.0]: https://github.com/gearman/gearmand/releases/tag/2.0.0
-[gearmand]: https://github.com/gearman/gearmand
+This image is built on version [2.2.0] of [gearmand].
 
 > [!WARNING]
-> Older releases are no longer maintained and may contain unpatched security vulnerabilities and outdated dependencies. While these images remain available in the container registry, we strongly discourage their use.
+> Older releases are no longer maintained and may contain unpatched security
+> vulnerabilities and outdated dependencies. While these images remain available
+> in the container registry, we strongly discourage their use.
 
 ## Supported gearmand backends
 
@@ -81,16 +81,18 @@ services:
 ```
 
 > [!WARNING]
-> With gearmand's MySQL queue plugin, this setting makes the database
-> connection unencrypted. Use it only when TLS cannot be enabled on the
-> database server and the connection travels over a trusted private network.
+> With gearmand's MySQL queue plugin, this setting makes the database connection
+> unencrypted. Use it only when TLS cannot be enabled on the database server and
+> the connection travels over a trusted private network.
 
 ## Environment variables
 
-This image includes an entry point that translates environment strings into [configuration attributes](https://gearman.org/manual/job_server/). The following is a list of the strings currently supported:
+This image includes an entry point that translates environment strings into
+[configuration attributes]. The following is a list of the strings currently
+supported:
 
 | Name                                  | Description                                                                                                                              | Default                         |
-|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
 | VERBOSE                               | Logging level                                                                                                                            | INFO                            |
 | GEARMAND_PORT                         | Listen port                                                                                                                              | 4730                            |
 | QUEUE_TYPE                            | Persistent queue type to use                                                                                                             | builtin                         |
@@ -124,26 +126,40 @@ they want jobs to continue retrying without a limit.
 Keepalive remains opt-in. When `KEEPALIVE` is enabled, the defaults above match
 the production values recommended in the [Gearman 2.0.0 release notes][2.0.0].
 
-You can also inject your version of config file to `/etc/gearmand.conf` as needed.
+You can also inject your version of config file to `/etc/gearmand.conf` as
+needed.
 
 ## Release process
 
 To create a new release, run the following command, replacing `VERSION` with the
 desired version (which must match a directory for the build context in this
-repository), e.g. `2.1.0`:
+repository), e.g. `2.2.0`:
 
-    gh workflow run release.yml --field version=VERSION
+```
+gh workflow run release.yml --field version=VERSION
+```
 
 Beginning with Gearman 2.0.0, packaging-only rebuilds keep the upstream version
-and append a release suffix, starting with `-r1` (for example, `2.1.0-r1`).
+and append a release suffix, starting with `-r1` (for example, `2.2.0-r1`).
 Gearman 1.x images retain the legacy dotted scheme (for example, `1.1.22.1`).
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the versioning policy.
+See [CONTRIBUTING.md] for the versioning policy.
 
 This command will automatically build and publish the images, create a git tag,
 and publish a GitHub release.
 
 ## Credits
 
-See the [list of contributors](https://github.com/artefactual-labs/docker-gearmand/graphs/contributors).
+See the [list of contributors].
 
-Thanks to @Mararok for the new entry point bringing support for environment variables and secrets.
+Thanks to @Mararok for the new entry point bringing support for environment
+variables and secrets.
+
+[2.0.0]: https://github.com/gearman/gearmand/releases/tag/2.0.0
+[2.2.0]: https://github.com/gearman/gearmand/releases/tag/2.2.0
+[configuration attributes]: https://gearman.org/manual/job_server/
+[contributing.md]: CONTRIBUTING.md
+[dockerfile]: 2.2.0/Dockerfile
+[gearmand]: https://github.com/gearman/gearmand
+[list of contributors]: https://github.com/artefactual-labs/docker-gearmand/graphs/contributors
+[release-badge]: https://img.shields.io/docker/v/artefactual/gearmand?style=flat-square
+[repository]: https://github.com/artefactual-labs/docker-gearmand
