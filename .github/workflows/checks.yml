@@ -48,7 +48,7 @@ jobs:
         uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - name: Check workflows
+      - name: Check workflows and Dependabot configuration
         uses: jdx/jactionlint@v2.2.0
         with:
           strict-exit: "true"
