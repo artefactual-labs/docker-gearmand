@@ -82,7 +82,7 @@ RUN set -eux; \
 	ln -s /usr/local/bin/docker-entrypoint.sh /entrypoint.sh
 
 HEALTHCHECK --interval=5m --timeout=3s --retries=2 \
-	CMD gearman --ping -h 127.0.0.1 -p "${GEARMAND_PORT:-${LISTEN_PORT:-$GEARMAND_LISTEN_PORT}}" -t 2000
+	CMD ["sh", "-c", "exec gearman --ping -h 127.0.0.1 -p \"${GEARMAND_PORT:-${LISTEN_PORT:-$GEARMAND_LISTEN_PORT}}\" -t 2000"]
 
 USER gearman
 EXPOSE ${GEARMAND_LISTEN_PORT}
