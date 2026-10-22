@@ -1,0 +1,4 @@
+profile: pedantic
+rules:
+  # Docker Hub credentials remain repository secrets; no protected environment is configured.
+  secrets-outside-env: off

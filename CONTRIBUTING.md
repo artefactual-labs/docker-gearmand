@@ -1,5 +1,16 @@
 # Contributing
 
+## Workflow checks
+
+Run [jactionlint] before committing workflow changes:
+
+```bash
+jactionlint --strict-exit
+```
+
+The configuration uses the pedantic profile. Docker Hub credentials remain
+repository secrets, so the environment-secret rule is disabled.
+
 ## How to release
 
 Each upstream Gearman release has its own dedicated tree at the repository root
@@ -49,3 +60,4 @@ The input must match a release tree in the repository.
 - [x] Improve healthcheck robustness (avoid `netstat`)
 
 [2.2.0]: https://github.com/artefactual-labs/docker-gearmand/tree/main/2.2.0
+[jactionlint]: https://github.com/jdx/jactionlint
