@@ -5,9 +5,9 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/checks.yml':
         - 'actions/checkout@v7.0.1'
-        - 'bridgecrewio/checkov-action@v12.3134.0'
+        - 'bridgecrewio/checkov-action@v12.3135.0'
         - 'hadolint/hadolint-action@v3.5.0'
-        - 'jdx/jactionlint@v2.2.0'
+        - 'jdx/jactionlint@v2.3.0'
         - 'ludeeus/action-shellcheck@2.0.0'
     '.github/workflows/release.yml':
         - 'actions/checkout@v7.0.1'
@@ -34,9 +34,9 @@ dependencies:
         commit: 'sha1-cf430e030ddbb5b0abf93d22962f4752f3646cd9'
         owner_id: 44036562
         repo_id: 192625955
-    'bridgecrewio/checkov-action@v12.3134.0':
-        ref: 'v12.3134.0'
-        commit: 'sha1-6f26dc90000b74feb589a906cdfae540f5119895'
+    'bridgecrewio/checkov-action@v12.3135.0':
+        ref: 'v12.3135.0'
+        commit: 'sha1-c3e106d5f8f4253a6de5110efb41a080f83db294'
         owner_id: 48174253
         repo_id: 256738016
     'docker/build-push-action@v7.4.0':
@@ -69,9 +69,9 @@ dependencies:
         commit: 'sha1-06be81baf89a55ffd0e24b8f04a4185738dd3387'
         owner_id: 34047791
         repo_id: 212438777
-    'jdx/jactionlint@v2.2.0':
-        ref: 'v2.2.0'
-        commit: 'sha1-1027f0a131ab98bc7e191d995bfa15dbed5bbf8f'
+    'jdx/jactionlint@v2.3.0':
+        ref: 'v2.3.0'
+        commit: 'sha1-a65ab044e916760429068fe5794b8306abdfcbb9'
         owner_id: 216188
         repo_id: 1404951382
         uses:
