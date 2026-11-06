@@ -1,5 +1,19 @@
 version: 2
 updates:
+  # Advance this directory when preparing a new release tree. Once published,
+  # apply updates in a new packaging revision, preserving the released tree.
+  - package-ecosystem: "docker"
+    directory: "/2.2.0-r1"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+      # Propose Alpine fixes promptly; updates still require manual review.
+      exclude:
+        - "alpine"
+    open-pull-requests-limit: 1
+    allow:
+      - dependency-name: "alpine"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
