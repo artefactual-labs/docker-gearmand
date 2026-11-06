@@ -36,17 +36,21 @@ another packaging change), create a new tree with the next packaging revision,
 such as `2.2.0-r1` and then `2.2.0-r2`. Keep `GEARMAND_VERSION` set to the
 upstream version (`2.2.0` in these examples).
 
+Use the latest stable Alpine release when preparing an image release, with both
+its version tag and multi-platform digest pinned in `ALPINE_IMAGE` (for example,
+`alpine:3.24.4@sha256:...`).
+
 Gearman 1.x image releases retain the legacy dotted packaging revision scheme,
 such as `1.1.22.1`. Existing 1.x releases will not be renamed to use `-rN`.
 
-1. Prepare release, e.g. see the [2.2.0] directory.
+1. Prepare release, e.g. see the [2.2.0-r1] directory.
 
 2. Update `CURRENT_VERSION` in `checks.yml` to the new release tree.
 
 3. Launch the release workflow:
 
    ```bash
-   gh workflow run release.yml --field version=2.2.0
+   gh workflow run release.yml --field version=2.2.0-r1
    ```
 
 The release workflow accepts 1.x versions using `1.Y.Z` or `1.Y.Z.N`, and
@@ -73,4 +77,5 @@ The input must match a release tree in the repository.
 - [x] Improve healthcheck robustness (avoid `netstat`)
 
 [2.2.0]: https://github.com/artefactual-labs/docker-gearmand/tree/main/2.2.0
+[2.2.0-r1]: https://github.com/artefactual-labs/docker-gearmand/tree/main/2.2.0-r1
 [jactionlint]: https://github.com/jdx/jactionlint

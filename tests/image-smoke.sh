@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-version=${1:-2.2.0}
+version=${1:-2.2.0-r1}
 test_id=$$
 image="docker-gearmand:image-smoke-${test_id}"
 container="docker-gearmand-image-smoke-${test_id}"
@@ -25,8 +25,9 @@ docker run --rm --entrypoint sh "${image}" -ec \
 	'apk info --exists "ca-certificates-bundle>=20261020-r0"'
 
 reported_version="$(docker run --rm "${image}" gearmand --version)"
-if [[ "${reported_version}" != *"gearmand ${version}"* ]]; then
-	echo "Expected gearmand ${version}, got: ${reported_version}" >&2
+upstream_version="$(sed -n 's/^ENV GEARMAND_VERSION=//p' "${version}/Dockerfile")"
+if [[ -z "${upstream_version}" || "${reported_version}" != *"gearmand ${upstream_version}"* ]]; then
+	echo "Expected gearmand ${upstream_version}, got: ${reported_version}" >&2
 	exit 1
 fi
 

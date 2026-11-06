@@ -9,9 +9,10 @@ as the base image.
 
 Only the following version is currently supported and maintained:
 
-- [`2.2.0-alpine`, `2.2.0`, `latest` (*Dockerfile*)][dockerfile]
+- [`2.2.0-r1-alpine`, `2.2.0-r1`, `latest` (*Dockerfile*)][dockerfile]
 
-This image is built on version [2.2.0] of [gearmand].
+This image is built on version [2.2.0] of [gearmand] and Alpine Linux 3.24.4.
+The `2.2.0-r1` packaging revision refreshes the Alpine base, pinned by digest.
 
 > [!WARNING]
 > Older releases are no longer maintained and may contain unpatched security
@@ -133,7 +134,7 @@ needed.
 
 To create a new release, run the following command, replacing `VERSION` with the
 desired version (which must match a directory for the build context in this
-repository), e.g. `2.2.0`:
+repository), e.g. `2.2.0-r1`:
 
 ```
 gh workflow run release.yml --field version=VERSION
@@ -158,7 +159,7 @@ variables and secrets.
 [2.2.0]: https://github.com/gearman/gearmand/releases/tag/2.2.0
 [configuration attributes]: https://gearman.org/manual/job_server/
 [contributing.md]: CONTRIBUTING.md
-[dockerfile]: 2.2.0/Dockerfile
+[dockerfile]: 2.2.0-r1/Dockerfile
 [gearmand]: https://github.com/gearman/gearmand
 [list of contributors]: https://github.com/artefactual-labs/docker-gearmand/graphs/contributors
 [release-badge]: https://img.shields.io/docker/v/artefactual/gearmand?style=flat-square

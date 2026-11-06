@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 env:
-  CURRENT_VERSION: 2.2.0
+  CURRENT_VERSION: 2.2.0-r1
 
 jobs:
   verify-actions-lock:
