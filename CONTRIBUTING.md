@@ -20,9 +20,20 @@ credentials remain repository secrets, so the environment-secret rule is
 disabled.
 
 Dependabot checks GitHub Actions weekly, with a seven-day cooldown and one
-grouped version-update pull request at a time. Docker updates are excluded
-because release trees are immutable. The `gh-actions-lock` extension version in
-the installation command must still be updated manually.
+grouped version-update pull request at a time. It also checks Alpine daily in
+the current release tree without a cooldown, with one Docker update pull request
+at a time. The explicit version tag and digest in the shared `base` stage let
+Dependabot update both while keeping the image pinned.
+
+Treat Docker update pull requests for a published tree as proposals for the next
+packaging revision: copy the released tree, apply the proposed update there, and
+leave the published tree unchanged. Update the Dependabot directory, CI version,
+test defaults, and README when preparing that revision. Do not auto-merge Docker
+updates into a published tree. These are version updates; Dependabot does not
+scan installed Alpine packages for vulnerabilities.
+
+The `gh-actions-lock` extension version in the installation command must still
+be updated manually.
 
 ## How to release
 
@@ -37,8 +48,8 @@ such as `2.2.0-r1` and then `2.2.0-r2`. Keep `GEARMAND_VERSION` set to the
 upstream version (`2.2.0` in these examples).
 
 Use the latest stable Alpine release when preparing an image release, with both
-its version tag and multi-platform digest pinned in `ALPINE_IMAGE` (for example,
-`alpine:3.24.4@sha256:...`).
+its version tag and multi-platform digest pinned in the `base` stage (for
+example, `alpine:3.24.4@sha256:...`).
 
 Gearman 1.x image releases retain the legacy dotted packaging revision scheme,
 such as `1.1.22.1`. Existing 1.x releases will not be renamed to use `-rN`.
