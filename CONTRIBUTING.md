@@ -73,20 +73,28 @@ The input must match a release tree in the repository.
 > [!NOTE]
 > Long-term goal: transfer ownership to Gearman maintainers.
 
+### Completed
+
 - [x] Automate release process
 - [x] Publish multi-arch images
 - [x] Pin actions in GitHub workflows
+- [x] Publish runtime SBOMs and upload them to Dependency-Track
+- [x] Publish and verify signed provenance and SBOM attestations
+- [x] Run image validation tests
+- [x] Configure GitHub Actions dependency updates
+- [x] Enforce a release vulnerability policy
+- [x] Improve healthcheck robustness (avoid `netstat`)
+
+### Build and maintenance
+
 - [ ] Reduce duplication across release trees (template or generator)
 - [ ] Check current release(s) dynamically in `checks.yml`
-- [x] Publish runtime SBOMs and upload them to Dependency-Track
-- [ ] Publish provenance output and sign images
-- [x] Run image validation tests
 - [ ] Convert entrypoint to POSIX `sh` (drop `bash`)
-- [x] Configure GitHub Actions dependency updates
+
+### Supply chain hardening
+
 - [ ] Improve build reproducibility (deterministic builds, pinned deps)
-- [x] Enforce a release vulnerability policy
-- [ ] Supply chain attestations (SLSA, provenance, SBOMs)
-- [x] Improve healthcheck robustness (avoid `netstat`)
+- [ ] Use an isolated trusted build workflow toward SLSA Build Level 3
 
 [2.2.0]: https://github.com/artefactual-labs/docker-gearmand/tree/main/2.2.0
 [2.2.0-r1]: https://github.com/artefactual-labs/docker-gearmand/tree/main/2.2.0-r1
