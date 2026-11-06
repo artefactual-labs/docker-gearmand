@@ -119,6 +119,43 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Scan runtime vulnerabilities
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/trivy" "$RUNNER_TEMP/vulnerabilities"
+          docker run --rm \
+            --volume "$RUNNER_TEMP/trivy:/root/.cache/trivy" \
+            "$TRIVY_IMAGE" image \
+            --image-src remote --platform "$PLATFORM" \
+            --scanners vuln --format json --ignorefile '' --no-progress \
+            "${REGISTRY_IMAGE}@${DIGEST}" \
+            > "$RUNNER_TEMP/vulnerabilities/vulnerabilities-${PLATFORM_PAIR}.json"
+
+      - name: Upload full vulnerability report
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: vulnerabilities-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/vulnerabilities/*.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Block fixable high and critical vulnerabilities
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          # Reuse the database downloaded by the full scan for the same verdict.
+          docker run --rm \
+            --volume "$RUNNER_TEMP/trivy:/root/.cache/trivy" \
+            --mount "type=bind,src=$GITHUB_WORKSPACE/.trivyignore.yaml,dst=/trivyignore.yaml,readonly" \
+            "$TRIVY_IMAGE" image \
+            --image-src remote --platform "$PLATFORM" \
+            --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed \
+            --ignorefile /trivyignore.yaml --skip-db-update --no-progress \
+            --exit-code 1 "${REGISTRY_IMAGE}@${DIGEST}"
+
       - name: Export digest
         env:
           DIGEST: ${{ steps.build.outputs.digest }}

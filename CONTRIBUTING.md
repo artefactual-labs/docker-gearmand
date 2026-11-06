@@ -84,7 +84,7 @@ The input must match a release tree in the repository.
 - [ ] Convert entrypoint to POSIX `sh` (drop `bash`)
 - [x] Configure GitHub Actions dependency updates
 - [ ] Improve build reproducibility (deterministic builds, pinned deps)
-- [ ] Enforce a release vulnerability policy
+- [x] Enforce a release vulnerability policy
 - [ ] Supply chain attestations (SLSA, provenance, SBOMs)
 - [x] Improve healthcheck robustness (avoid `netstat`)
 

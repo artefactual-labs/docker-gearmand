@@ -1,0 +1,3 @@
+# Release exceptions require review, a statement explaining the risk decision,
+# and an expired_at date (YYYY-MM-DD). Scope entries with purls where possible.
+vulnerabilities: []
