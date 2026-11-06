@@ -23,6 +23,7 @@ defaults:
 env:
   REGISTRY_IMAGE: artefactual/gearmand
   DOCKERHUB_USERNAME: artefactual
+  TRIVY_IMAGE: aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c
 
 jobs:
   build:
@@ -95,6 +96,28 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ env.REGISTRY_IMAGE }}
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
+
+      - name: Generate runtime SBOM
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/sboms"
+          docker run --rm "$TRIVY_IMAGE" image \
+            --image-src remote --platform "$PLATFORM" \
+            --format cyclonedx --no-progress \
+            "${REGISTRY_IMAGE}@${DIGEST}" \
+            > "$RUNNER_TEMP/sboms/sbom-${PLATFORM_PAIR}.cdx.json"
+          jq -e '.bomFormat == "CycloneDX" and (.components | length > 0)' \
+            "$RUNNER_TEMP/sboms/sbom-${PLATFORM_PAIR}.cdx.json" > /dev/null
+
+      - name: Upload runtime SBOM
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: sbom-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/sboms/*.cdx.json
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Export digest
         env:
@@ -179,8 +202,15 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
+      - name: Download runtime SBOMs
+        uses: actions/download-artifact@v8.0.2
+        with:
+          path: ${{ runner.temp }}/sboms
+          pattern: sbom-*
+          merge-multiple: true
+
       - name: Create release and tag with gh
-        run: gh release create "$VERSION" --title "$VERSION"
+        run: gh release create "$VERSION" "$RUNNER_TEMP"/sboms/*.cdx.json --title "$VERSION"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ github.event.inputs.version }}
@@ -191,3 +221,36 @@ jobs:
           username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ env.REGISTRY_IMAGE }}
+
+  dependency-track:
+    name: Upload runtime inventory to Dependency-Track
+    timeout-minutes: 5
+    runs-on: ubuntu-26.04
+    needs: release
+    strategy:
+      fail-fast: false
+      matrix:
+        platform-pair: [linux-amd64, linux-arm64]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download runtime SBOM
+        uses: actions/download-artifact@v8.0.2
+        with:
+          name: sbom-${{ matrix.platform-pair }}
+          path: ${{ runner.temp }}/sboms
+
+      - name: Upload SBOM
+        env:
+          DEPENDENCY_TRACK_URL: ${{ secrets.DEPENDENCY_TRACK_URL }}
+          DEPENDENCY_TRACK_API_KEY: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
+          PROJECT_NAME: ${{ github.repository }}-${{ matrix.platform-pair }}
+          VERSION: ${{ github.event.inputs.version }}
+          PLATFORM_PAIR: ${{ matrix.platform-pair }}
+        run: |
+          scripts/upload-sbom.sh \
+            "$RUNNER_TEMP/sboms/sbom-${PLATFORM_PAIR}.cdx.json" \
+            "$PROJECT_NAME" "$VERSION"
