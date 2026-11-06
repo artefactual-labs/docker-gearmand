@@ -78,12 +78,13 @@ The input must match a release tree in the repository.
 - [x] Pin actions in GitHub workflows
 - [ ] Reduce duplication across release trees (template or generator)
 - [ ] Check current release(s) dynamically in `checks.yml`
-- [ ] Publish SBOM/provenance output and sign images
+- [x] Publish runtime SBOMs and upload them to Dependency-Track
+- [ ] Publish provenance output and sign images
 - [x] Run image validation tests
 - [ ] Convert entrypoint to POSIX `sh` (drop `bash`)
 - [x] Configure GitHub Actions dependency updates
 - [ ] Improve build reproducibility (deterministic builds, pinned deps)
-- [ ] Vulnerability scanning
+- [ ] Enforce a release vulnerability policy
 - [ ] Supply chain attestations (SLSA, provenance, SBOMs)
 - [x] Improve healthcheck robustness (avoid `netstat`)
 
