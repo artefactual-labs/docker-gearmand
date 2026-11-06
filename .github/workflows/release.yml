@@ -30,6 +30,10 @@ jobs:
     name: Build platform image
     timeout-minutes: 30
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      id-token: write # Obtain a short-lived signing identity.
+      attestations: write # Publish signed provenance and SBOM statements.
     strategy:
       fail-fast: false
       matrix:
@@ -95,6 +99,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ env.REGISTRY_IMAGE }}
+          provenance: mode=max
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
 
       - name: Generate runtime SBOM
@@ -156,6 +161,50 @@ jobs:
             --ignorefile /trivyignore.yaml --skip-db-update --no-progress \
             --exit-code 1 "${REGISTRY_IMAGE}@${DIGEST}"
 
+      - name: Resolve platform manifest
+        id: platform-manifest
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          # The build output is an index containing the image and BuildKit provenance.
+          digest="$(docker buildx imagetools inspect --raw "${REGISTRY_IMAGE}@${DIGEST}" |
+            jq -er --arg arch "${PLATFORM#linux/}" '
+              [.manifests[] | select(.platform.os == "linux" and .platform.architecture == $arch)]
+              | if length == 1 then .[0].digest else error("Expected one platform manifest") end
+              | select(test("^sha256:[0-9a-f]{64}$"))')"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      - name: Attest platform provenance
+        uses: actions/attest@v4.2.2
+        with:
+          subject-name: docker.io/${{ env.REGISTRY_IMAGE }}
+          subject-digest: ${{ steps.platform-manifest.outputs.digest }}
+          push-to-registry: true
+          create-storage-record: false
+
+      - name: Attest runtime SBOM
+        uses: actions/attest@v4.2.2
+        with:
+          subject-name: docker.io/${{ env.REGISTRY_IMAGE }}
+          subject-digest: ${{ steps.platform-manifest.outputs.digest }}
+          sbom-path: ${{ runner.temp }}/sboms/sbom-${{ env.PLATFORM_PAIR }}.cdx.json
+          push-to-registry: true
+          create-storage-record: false
+
+      - name: Verify platform attestations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIGEST: ${{ steps.platform-manifest.outputs.digest }}
+        run: |
+          for predicate in https://slsa.dev/provenance/v1 https://cyclonedx.org/bom; do
+            gh attestation verify "oci://docker.io/${REGISTRY_IMAGE}@${DIGEST}" \
+              --bundle-from-oci --repo "$GITHUB_REPOSITORY" \
+              --cert-identity "${GITHUB_SERVER_URL}/${GITHUB_WORKFLOW_REF}" \
+              --source-digest "$GITHUB_SHA" --source-ref "$GITHUB_REF" \
+              --deny-self-hosted-runners --predicate-type "$predicate"
+          done
+
       - name: Export digest
         env:
           DIGEST: ${{ steps.build.outputs.digest }}
@@ -175,6 +224,10 @@ jobs:
     name: Publish multi-platform image
     timeout-minutes: 10
     runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+      id-token: write # Sign the combined image with the workflow identity.
+      attestations: write # Publish the combined image's provenance.
     needs:
       - build
     steps:
@@ -206,18 +259,52 @@ jobs:
             ${{ github.event.inputs.version }}
             latest
 
-      - name: Create manifest list and push
+      - name: Push candidate manifest list
+        id: candidate
         working-directory: ${{ runner.temp }}/digests
+        run: |
+          args=()
+          for digest in *; do
+            args+=("${REGISTRY_IMAGE}@sha256:${digest}")
+          done
+          docker buildx imagetools create \
+            --tag "${REGISTRY_IMAGE}:build-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --metadata-file "$RUNNER_TEMP/manifest.json" "${args[@]}"
+          digest="$(jq -er '."containerimage.descriptor".digest |
+            select(test("^sha256:[0-9a-f]{64}$"))' "$RUNNER_TEMP/manifest.json")"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      - name: Attest multi-platform provenance
+        uses: actions/attest@v4.2.2
+        with:
+          subject-name: docker.io/${{ env.REGISTRY_IMAGE }}
+          subject-digest: ${{ steps.candidate.outputs.digest }}
+          push-to-registry: true
+          create-storage-record: false
+
+      - name: Verify multi-platform provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIGEST: ${{ steps.candidate.outputs.digest }}
+        run: |
+          gh attestation verify "oci://docker.io/${REGISTRY_IMAGE}@${DIGEST}" \
+            --bundle-from-oci --repo "$GITHUB_REPOSITORY" \
+            --cert-identity "${GITHUB_SERVER_URL}/${GITHUB_WORKFLOW_REF}" \
+            --source-digest "$GITHUB_SHA" --source-ref "$GITHUB_REF" \
+            --deny-self-hosted-runners --predicate-type https://slsa.dev/provenance/v1
+
+      - name: Publish verified release tags
+        env:
+          DIGEST: ${{ steps.candidate.outputs.digest }}
         run: |
           mapfile -t tags < <(jq -r '.tags[]' <<< "$DOCKER_METADATA_OUTPUT_JSON")
           args=()
           for tag in "${tags[@]}"; do
             args+=(--tag "$tag")
           done
-          for digest in *; do
-            args+=("${REGISTRY_IMAGE}@sha256:${digest}")
-          done
-          docker buildx imagetools create "${args[@]}"
+          docker buildx imagetools create "${args[@]}" \
+            --metadata-file "$RUNNER_TEMP/published.json" "${REGISTRY_IMAGE}@${DIGEST}"
+          test "$(jq -er '."containerimage.descriptor".digest' "$RUNNER_TEMP/published.json")" = "$DIGEST"
 
       - name: Inspect image
         env:
@@ -247,7 +334,7 @@ jobs:
           merge-multiple: true
 
       - name: Create release and tag with gh
-        run: gh release create "$VERSION" "$RUNNER_TEMP"/sboms/*.cdx.json --title "$VERSION"
+        run: gh release create "$VERSION" "$RUNNER_TEMP"/sboms/*.cdx.json --title "$VERSION" --target "$GITHUB_SHA"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ github.event.inputs.version }}
