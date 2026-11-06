@@ -15,8 +15,16 @@ project_version=$3
 : "${project_name:?Project name must not be empty}"
 : "${project_version:?Project version must not be empty}"
 
+is_latest=${DEPENDENCY_TRACK_IS_LATEST:-false}
+if [[ "$is_latest" != true && "$is_latest" != false ]]; then
+	echo "DEPENDENCY_TRACK_IS_LATEST must be true or false" >&2
+	exit 1
+fi
+
 project_args=(
 	--form-string "autoCreate=true"
+	# Dependency-Track applies isLatest only when creating a new project.
+	--form-string "isLatest=${is_latest}"
 	--form-string "projectName=${project_name}"
 	--form-string "projectVersion=${project_version}"
 )
