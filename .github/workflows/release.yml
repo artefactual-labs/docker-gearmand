@@ -7,6 +7,11 @@ on:
         description: 'Image release (e.g. 1.1.22.1 or 2.2.0-r1)'
         required: true
         type: string
+      latest:
+        description: 'Mark as latest in Docker Hub, GitHub, and Dependency-Track'
+        required: true
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -257,7 +262,7 @@ jobs:
           tags: |
             ${{ github.event.inputs.version }}-alpine
             ${{ github.event.inputs.version }}
-            latest
+            type=raw,value=latest,enable=${{ inputs.latest }}
 
       - name: Push candidate manifest list
         id: candidate
@@ -334,10 +339,11 @@ jobs:
           merge-multiple: true
 
       - name: Create release and tag with gh
-        run: gh release create "$VERSION" "$RUNNER_TEMP"/sboms/*.cdx.json --title "$VERSION" --target "$GITHUB_SHA"
+        run: gh release create "$VERSION" "$RUNNER_TEMP"/sboms/*.cdx.json --title "$VERSION" --target "$GITHUB_SHA" --latest="$MARK_LATEST"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ github.event.inputs.version }}
+          MARK_LATEST: ${{ inputs.latest && 'true' || 'false' }}
 
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v5.0.0
@@ -372,7 +378,7 @@ jobs:
           DEPENDENCY_TRACK_URL: ${{ secrets.DEPENDENCY_TRACK_URL }}
           DEPENDENCY_TRACK_API_KEY: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
           DEPENDENCY_TRACK_PARENT_UUID: 4a9bfbde-fa21-4428-b3c5-2bf94971ab2c
-          DEPENDENCY_TRACK_IS_LATEST: "true"
+          DEPENDENCY_TRACK_IS_LATEST: ${{ inputs.latest && 'true' || 'false' }}
           PROJECT_NAME: ${{ github.repository }}-${{ matrix.platform-pair }}
           VERSION: ${{ github.event.inputs.version }}
           PLATFORM_PAIR: ${{ matrix.platform-pair }}
