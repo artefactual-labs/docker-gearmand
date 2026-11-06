@@ -371,6 +371,7 @@ jobs:
         env:
           DEPENDENCY_TRACK_URL: ${{ secrets.DEPENDENCY_TRACK_URL }}
           DEPENDENCY_TRACK_API_KEY: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
+          DEPENDENCY_TRACK_PARENT_UUID: 4a9bfbde-fa21-4428-b3c5-2bf94971ab2c
           PROJECT_NAME: ${{ github.repository }}-${{ matrix.platform-pair }}
           VERSION: ${{ github.event.inputs.version }}
           PLATFORM_PAIR: ${{ matrix.platform-pair }}

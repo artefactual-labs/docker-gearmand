@@ -15,6 +15,19 @@ project_version=$3
 : "${project_name:?Project name must not be empty}"
 : "${project_version:?Project version must not be empty}"
 
+project_args=(
+	--form-string "autoCreate=true"
+	--form-string "projectName=${project_name}"
+	--form-string "projectVersion=${project_version}"
+)
+if [[ -n "${DEPENDENCY_TRACK_PARENT_UUID:-}" ]]; then
+	if [[ ! "$DEPENDENCY_TRACK_PARENT_UUID" =~ ^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$ ]]; then
+		echo "DEPENDENCY_TRACK_PARENT_UUID must be a UUID" >&2
+		exit 1
+	fi
+	project_args+=(--form-string "parentUUID=${DEPENDENCY_TRACK_PARENT_UUID}")
+fi
+
 jq -e '.bomFormat == "CycloneDX" and (.components | length > 0)' \
 	"$sbom_file" > /dev/null
 
@@ -22,9 +35,7 @@ response="$(
 	curl --fail --silent --show-error \
 		--connect-timeout 10 --max-time 120 \
 		--header "X-Api-Key: ${DEPENDENCY_TRACK_API_KEY}" \
-		--form-string "autoCreate=true" \
-		--form-string "projectName=${project_name}" \
-		--form-string "projectVersion=${project_version}" \
+		"${project_args[@]}" \
 		--form "bom=@${sbom_file}" \
 		"${DEPENDENCY_TRACK_URL%/}/api/v1/bom"
 )"
