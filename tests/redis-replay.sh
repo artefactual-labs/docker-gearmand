@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-version=${1:-2.2.0}
+version=${1:-2.2.0-r1}
 redis_image=${REDIS_IMAGE:-redis@sha256:892022f9f18c26c92c30e15194d132f90044af87b94a491a75429bbc3982eab1} # redis:7.4-alpine
 test_id=$$
 gearmand_image="docker-gearmand:redis-replay-${test_id}"

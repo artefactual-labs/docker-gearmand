@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-version=${1:-2.2.0}
+version=${1:-2.2.0-r1}
 mariadb_image=${MARIADB_IMAGE:-mariadb@sha256:0d0945c57f75b3a3b9ebe71aedaaad005fa5305054e8fca3d2e42a8c92b43b5e} # mariadb:10.11
 test_id=$$
 gearmand_image="docker-gearmand:mysql-no-tls-${test_id}"
