@@ -5,9 +5,9 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/checks.yml':
         - 'actions/checkout@v7.0.1'
-        - 'bridgecrewio/checkov-action@v12.3135.0'
+        - 'bridgecrewio/checkov-action@v12.3136.0'
         - 'hadolint/hadolint-action@v3.5.0'
-        - 'jdx/jactionlint@v2.3.0'
+        - 'jdx/jactionlint@v2.4.0'
         - 'ludeeus/action-shellcheck@2.0.0'
     '.github/workflows/release.yml':
         - 'actions/attest@v4.2.2'
@@ -15,7 +15,7 @@ workflows:
         - 'actions/download-artifact@v8.0.2'
         - 'actions/upload-artifact@v7.0.2'
         - 'docker/build-push-action@v7.4.0'
-        - 'docker/login-action@v4.6.0'
+        - 'docker/login-action@v4.7.0'
         - 'docker/metadata-action@v6.2.0'
         - 'docker/setup-buildx-action@v4.4.1'
         - 'peter-evans/dockerhub-description@v5.0.0'
@@ -40,9 +40,9 @@ dependencies:
         commit: 'sha1-cf430e030ddbb5b0abf93d22962f4752f3646cd9'
         owner_id: 44036562
         repo_id: 192625955
-    'bridgecrewio/checkov-action@v12.3135.0':
-        ref: 'v12.3135.0'
-        commit: 'sha1-c3e106d5f8f4253a6de5110efb41a080f83db294'
+    'bridgecrewio/checkov-action@v12.3136.0':
+        ref: 'v12.3136.0'
+        commit: 'sha1-c10e2438743528f9e4549758fad8b7a62052541d'
         owner_id: 48174253
         repo_id: 256738016
     'docker/build-push-action@v7.4.0':
@@ -50,9 +50,9 @@ dependencies:
         commit: 'sha1-c3c9e263c25d99ce0380d002d59b67737d91b0dc'
         owner_id: 5429470
         repo_id: 241092383
-    'docker/login-action@v4.6.0':
-        ref: 'v4.6.0'
-        commit: 'sha1-dbcb813823bdd20940b903addbd779551569679f'
+    'docker/login-action@v4.7.0':
+        ref: 'v4.7.0'
+        commit: 'sha1-81c6f93d4bc991e510b342a00b419b3bb4efc5c6'
         owner_id: 5429470
         repo_id: 287743349
     'docker/metadata-action@v6.2.0':
@@ -75,9 +75,9 @@ dependencies:
         commit: 'sha1-06be81baf89a55ffd0e24b8f04a4185738dd3387'
         owner_id: 34047791
         repo_id: 212438777
-    'jdx/jactionlint@v2.3.0':
-        ref: 'v2.3.0'
-        commit: 'sha1-a65ab044e916760429068fe5794b8306abdfcbb9'
+    'jdx/jactionlint@v2.4.0':
+        ref: 'v2.4.0'
+        commit: 'sha1-baa8d685e2b27ff5821558c9eeabb2051c1da61b'
         owner_id: 216188
         repo_id: 1404951382
         uses:
